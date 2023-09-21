@@ -125,3 +125,21 @@ VALUES ('Sam Smith', 34), ('Jennifer Orwell', 19), ('Bob', 45), ('Melody Pond', 
 /*Add data to species table*/
 
 INSERT INTO species(name) VALUES('Pokemon'), ('Digimon');
+
+/*Update species_id on animal table*/
+
+UPDATE animals
+SET species_id = (
+        SELECT id
+        FROM species
+        WHERE name = 'Digimon'
+    )
+WHERE name LIKE '%mon';
+
+UPDATE animals
+SET species_id = (
+        SELECT id
+        FROM species
+        WHERE name = 'Pokemon'
+    )
+WHERE name NOT LIKE '%mon';
