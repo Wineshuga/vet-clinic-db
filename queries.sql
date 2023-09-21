@@ -93,7 +93,8 @@ HAVING SUM(escape_attempts) = (
                 SELECT
                     SUM(escape_attempts) AS total_escape_attempts
                 FROM animals
-                GROUP BY neutered
+                GROUP BY
+                    neutered
             )
     );
 
@@ -110,3 +111,71 @@ WHERE
     date_of_birth > '1990-01-01'
     AND date_of_birth < '2000-12-31'
 GROUP BY species;
+
+/*Queries with JOIN*/
+
+SELECT
+    name AS animal_name,
+    full_name AS owner
+FROM animals as a
+    INNER JOIN owners as o ON a.owner_id = o.id
+WHERE o.id = 4;
+
+SELECT
+    a.name AS name_of_animals,
+    s.name AS TYPE
+FROM animals AS a
+    INNER JOIN species AS s ON a.species_id = s.id
+WHERE s.id = 1;
+
+SELECT
+    full_name AS owners,
+    name AS animal_name
+FROM owners AS o FULL
+    JOIN animals AS a ON o.id = a.owner_id;
+
+SELECT
+    s.name AS species,
+    COUNT(a.id) AS num_animals
+FROM animals AS a
+    INNER JOIN species AS s ON a.species_id = s.id
+GROUP BY s.name
+ORDER BY num_animals DESC;
+
+SELECT
+    full_name AS owner,
+    a.name AS animal_names,
+    s.name AS species
+FROM animals As a
+    INNER JOIN owners AS o ON a.owner_id = o.id
+    INNER JOIN species AS s ON a.species_id = s.id
+WHERE
+    full_name = 'Jennifer Orwell'
+    AND s.id = 2;
+
+SELECT
+    full_name AS owner,
+    name AS animal_name,
+    escape_attempts
+FROM animals AS a
+    INNER JOIN owners AS o ON a.owner_id = o.id
+WHERE
+    escape_attempts = 0
+    AND full_name = 'Dean Winchester';
+
+SELECT
+    full_name,
+    COUNT(a.id) AS num_of_animals
+FROM animals AS a
+    INNER JOIN owners AS o ON a.owner_id = o.id
+GROUP BY full_name
+HAVING COUNT(a.id) = (
+        SELECT MAX(animal_count)
+        FROM (
+                SELECT
+                    COUNT(id) AS animal_count
+                FROM animals
+                GROUP BY
+                    owner_id
+            ) AS subquery
+    );
