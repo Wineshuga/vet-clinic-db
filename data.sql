@@ -228,3 +228,49 @@ VALUES (
         38,
         '2008-06-08'
     );
+
+/*Add data to specialization table*/
+
+INSERT INTO
+    specializations (vet_id, species_id)
+VALUES ( (
+            SELECT id
+            FROM vets
+            WHERE
+                name = 'William Tatcher'
+        ), (
+            SELECT id
+            FROM species
+            WHERE name = 'Pokemon'
+        )
+    ), ( (
+            SELECT id
+            FROM vets
+            WHERE
+                name = 'Stephanie Mendez'
+        ), (
+            SELECT id
+            FROM species
+            WHERE name = 'Digimon'
+        )
+    ), ( (
+            SELECT id
+            FROM vets
+            WHERE
+                name = 'Stephanie Mendez'
+        ), (
+            SELECT id
+            FROM species
+            WHERE name = 'Pokemon'
+        )
+    ), ( (
+            SELECT id
+            FROM vets
+            WHERE
+                name = 'Jack Harkness'
+        ), (
+            SELECT id
+            FROM species
+            WHERE name = 'Digimon'
+        )
+    );
