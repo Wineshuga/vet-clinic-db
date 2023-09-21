@@ -83,3 +83,7 @@ CREATE TABLE
 /*Add visit_date column to visits table*/
 
 ALTER TABLE visits ADD COLUMN visit_date date;
+
+/*Drop primary key constraint in visits table*/
+
+ALTER TABLE visits DROP CONSTRAINT visits_pkey;
