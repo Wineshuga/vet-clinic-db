@@ -24,3 +24,30 @@ CREATE TABLE
         id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         name VARCHAR(50)
     );
+
+/*Modify animal table*/
+
+BEGIN;
+
+ALTER TABLE
+    animals DROP COLUMN species,
+ADD COLUMN species_id INT,
+ADD COLUMN owner_id INT;
+
+COMMIT;
+
+/*Make columns FOREIGN keys*/
+
+BEGIN;
+
+ALTER TABLE animals
+ADD
+    CONSTRAINT fk_species FOREIGN KEY(species_id) REFERENCES species(id);
+
+SAVEPOINT sp1;
+
+ALTER TABLE animals
+ADD
+    CONSTRAINT fk_owners FOREIGN KEY(owner_id) REFERENCES owners(id);
+
+COMMIT;
