@@ -11,3 +11,16 @@ CREATE TABLE
     );
 
 ALTER TABLE animals ADD COLUMN species VARCHAR(50);
+
+CREATE TABLE
+    owners(
+        id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        full_name VARCHAR(255) NOT NULL,
+        age INT
+    );
+
+CREATE TABLE
+    species(
+        id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        name VARCHAR(50)
+    );
