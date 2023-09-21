@@ -143,3 +143,65 @@ SET species_id = (
         WHERE name = 'Pokemon'
     )
 WHERE name NOT LIKE '%mon';
+
+/*Update owners_id on animal table*/
+
+BEGIN;
+
+UPDATE animals as a
+SET owner_id = (
+        SELECT id
+        FROM owners
+        WHERE
+            full_name = 'Sam Smith'
+    )
+WHERE a.name = 'Agumon';
+
+UPDATE animals as a
+SET owner_id = (
+        SELECT id
+        FROM owners
+        WHERE
+            full_name = 'Jennifer Orwell'
+    )
+WHERE
+    a.name IN ('Gabumon', 'Pikachu');
+
+UPDATE animals as a
+SET owner_id = (
+        SELECT id
+        FROM owners
+        WHERE full_name = 'Bob'
+    )
+WHERE
+    a.name IN ('Devimon', 'Plantmon');
+
+UPDATE animals as a
+SET owner_id = (
+        SELECT id
+        FROM owners
+        WHERE
+            full_name = 'Melody Pond'
+    )
+WHERE
+    a.name IN (
+        'Charmander',
+        'Squirtle',
+        'Blossom'
+    );
+
+UPDATE animals as a
+SET owner_id = (
+        SELECT id
+        FROM owners
+        WHERE
+            full_name = 'Dean Winchester'
+    )
+WHERE
+    a.name IN ('Angemon', 'Boarmon');
+
+SELECT name, owner_id from animals;
+
+SELECT * FROM owners;
+
+COMMIT;
