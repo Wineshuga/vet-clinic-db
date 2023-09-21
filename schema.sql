@@ -79,3 +79,7 @@ CREATE TABLE
         vet_id INT REFERENCES vets(id),
         PRIMARY KEY (animal_id, vet_id)
     );
+
+/*Add visit_date column to visits table*/
+
+ALTER TABLE visits ADD COLUMN visit_date date;
