@@ -51,3 +51,39 @@ ADD
     CONSTRAINT fk_owners FOREIGN KEY(owner_id) REFERENCES owners(id);
 
 COMMIT;
+
+/*create vets table*/
+
+CREATE TABLE
+    vets(
+        id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        name VARCHAR(255) NOT NULL,
+        age INT NOT NULL,
+        date_of_graduation DATE NOT NULL
+    );
+
+/*create specialization table*/
+
+CREATE TABLE
+    specializations(
+        species_id INT REFERENCES species(id),
+        vet_id INT REFERENCES vets(id),
+        PRIMARY KEY (species_id, vet_id)
+    );
+
+/*create visits table*/
+
+CREATE TABLE
+    visits(
+        animal_id INT REFERENCES animals(id),
+        vet_id INT REFERENCES vets(id),
+        PRIMARY KEY (animal_id, vet_id)
+    );
+
+/*Add visit_date column to visits table*/
+
+ALTER TABLE visits ADD COLUMN visit_date date;
+
+/*Drop primary key constraint in visits table*/
+
+ALTER TABLE visits DROP CONSTRAINT visits_pkey;

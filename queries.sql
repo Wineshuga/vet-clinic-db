@@ -170,7 +170,8 @@ FROM animals AS a
     INNER JOIN owners AS o ON a.owner_id = o.id
 GROUP BY full_name
 HAVING COUNT(a.id) = (
-        SELECT MAX(animal_count)
+        SELECT
+            MAX(animal_count)
         FROM (
                 SELECT
                     COUNT(id) AS animal_count
@@ -179,3 +180,133 @@ HAVING COUNT(a.id) = (
                     owner_id
             ) AS subquery
     );
+
+/*Queries on join_tables project*/
+
+SELECT
+    a.name AS animals,
+    vt.name AS vet,
+    vi.visit_date AS date
+FROM animals AS a
+    INNER JOIN visits AS vi ON vi.animal_id = a.id
+    INNER JOIN vets AS vt ON vi.vet_id = vt.id
+WHERE
+    vt.name = 'William Tatcher'
+    AND vi.visit_date = (
+        SELECT
+            MAX(visit_date)
+        FROM (
+                SELECT
+                    visit_date
+                FROM visits
+                WHERE
+                    vet_id = (
+                        SELECT
+                            id
+                        FROM
+                            vets
+                        WHERE
+                            name = 'William Tatcher'
+                    )
+            )
+    );
+
+SELECT
+    vt.name AS vet,
+    COUNT(vi.animal_id) AS animals
+FROM vets AS vt
+    INNER JOIN visits AS vi ON vt.id = vi.vet_id
+GROUP BY vt.name
+HAVING
+    vt.name = 'Stephanie Mendez';
+
+SELECT
+    vt.name AS vets,
+    sp.name AS species
+FROM vets AS vt FULL
+    JOIN specializations AS s ON s.vet_id = vt.id FULL
+    JOIN species AS sp ON sp.id = s.species_id;
+
+SELECT
+    a.name AS animals,
+    vt.name AS vet,
+    v.visit_date AS dates
+FROM animals AS a
+    INNER JOIN visits AS v ON a.id = v.animal_id
+    INNER JOIN vets AS vt ON vt.id = v.vet_id
+WHERE
+    v.visit_date BETWEEN '2020-04-01' AND '2020-08-30'
+    AND vt.name = 'Stephanie Mendez'
+
+SELECT
+    a.name AS animals,
+    COUNT(v.animal_id) AS num_of_visits
+FROM animals AS a
+    INNER JOIN visits AS v ON a.id = v.animal_id
+GROUP BY a.name
+HAVING COUNT(v.animal_id) = (
+        SELECT
+            MAX(visit_count)
+        FROM (
+                SELECT
+                    COUNT(animal_id) AS visit_count
+                FROM visits
+                GROUP BY
+                    animal_id
+            )
+    )
+
+SELECT
+    a.name AS animal,
+    vt.name AS vet,
+    v.visit_date AS date
+FROM animals AS a
+    INNER JOIN visits AS v ON a.id = v.animal_id
+    INNER JOIN vets AS vt ON vt.id = v.vet_id
+WHERE
+    vt.name = 'Maisy Smith'
+    AND v.visit_date = (
+        SELECT MIN(date)
+        FROM (
+                SELECT
+                    visit_date AS date
+                FROM visits
+                WHERE
+                    vt.name = 'Maisy Smith'
+            )
+    )
+
+SELECT
+    a.name AS animal,
+    vt.name AS vet,
+    v.visit_date AS visits
+FROM animals AS a
+    INNER JOIN visits AS v ON a.id = v.animal_id
+    INNER JOIN vets AS vt ON vt.id = v.vet_id
+WHERE v.visit_date = (
+        SELECT MAX(date)
+        FROM (
+                SELECT
+                    visit_date AS date
+                FROM visits
+            )
+    )
+
+SELECT
+    COUNT(*) AS num_visits_without_specialization
+FROM visits AS v
+    INNER JOIN vets AS vet ON v.vet_id = vet.id
+    LEFT JOIN specializations AS s ON v.animal_id = s.species_id AND vet.id = s.vet_id
+WHERE s.vet_id IS NULL;
+
+SELECT
+    s.name AS specialty,
+    COUNT(*) AS num_visits
+FROM visits AS v
+    INNER JOIN vets AS vt ON v.vet_id = vt.id
+    INNER JOIN animals AS a ON v.animal_id = a.id
+    INNER JOIN species AS s ON a.species_id = s.id
+WHERE vt.name = 'Maisy Smith'
+GROUP BY s.name
+ORDER BY num_visits DESC
+LIMIT 1;
