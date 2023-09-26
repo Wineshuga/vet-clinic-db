@@ -91,3 +91,13 @@ ALTER TABLE visits DROP CONSTRAINT visits_pkey;
 -- Add an email column to your owners table
 
 ALTER TABLE owners ADD COLUMN email VARCHAR(120);
+
+
+--  Improve execution time of queries with index creation.
+CREATE INDEX animal_id_indx ON animals(animal_id ASC);
+
+CREATE INDEX vet_id_indx ON visits(vet_id ASC);
+
+CREATE INDEX email_indx ON owners(email ASC);
+
+
